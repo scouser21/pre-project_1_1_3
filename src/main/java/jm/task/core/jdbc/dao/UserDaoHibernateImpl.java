@@ -4,7 +4,6 @@ import jm.task.core.jdbc.model.User;
 
 import java.util.List;
 
-// Должен пока что пустым быть
 public class UserDaoHibernateImpl implements UserDao {
     public UserDaoHibernateImpl() {
 

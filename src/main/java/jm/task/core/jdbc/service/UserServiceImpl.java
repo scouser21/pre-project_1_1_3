@@ -1,6 +1,7 @@
 package jm.task.core.jdbc.service;
 
 import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.util.Util;
 
 import javax.persistence.Column;
 import java.sql.*;
@@ -8,14 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private static final String URL = "jdbc:mysql://localhost:3306/testdb?useSSL=false";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
-    private static int NEXT_ID = 1;
+
 
 
     public void createUsersTable() {
-        Connection connection = getConnection();
+        Connection connection = Util.getConnection();
 
         if (connection != null) {
             try(Statement stmt = connection.createStatement()) {
@@ -44,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void dropUsersTable() {
-        Connection connection = getConnection();
+        Connection connection = Util.getConnection();
 
         if (connection != null) {
             try(Statement stmt = connection.createStatement()) {
@@ -66,13 +64,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        Connection connection = getConnection();
+        Connection connection = Util.getConnection();
 
         try( Statement stmt = connection.createStatement()) {
-            String sql = "INSERT INTO USERS VALUES (" + NEXT_ID + ", '" + name + "', '" + lastName + "'," + age + ");";
+            String sql = "INSERT INTO USERS VALUES (" + Util.getNextID() + ", '" + name + "', '" + lastName + "'," + age + ");";
             stmt.executeUpdate(sql);
             System.out.println("User с именем – " + name + " добавлен в базу данных");
-            NEXT_ID++;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -85,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void removeUserById(long id) {
-        Connection connection = getConnection();
+        Connection connection = Util.getConnection();
 
         try( Statement stmt = connection.createStatement()) {
             String sql = "DELETE FROM USERS " +
@@ -106,7 +103,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        Connection connection = getConnection();
+        Connection connection = Util.getConnection();
 
         try( Statement stmt = connection.createStatement()) {
             String sql = "SELECT * FROM USERS;";
@@ -142,13 +139,5 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private Connection getConnection(){
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return connection;
-    }
+
 }
